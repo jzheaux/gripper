@@ -21,39 +21,39 @@ options in the context of isolated method signatures.
 For example, consider the following class which replicates the Ignite-Player plugin, this
 time using Gripper:
 
-package com.joshcummings.ignite.gripper;
-
-import org.bukkit.entity.Player;
-
-import com.joshcummings.gripper.annotation.GripperArguments;
-import com.joshcummings.gripper.annotation.GripperCommand;
-
-@GripperCommand(name="ignite", playerOnly=true)
-public class IgniteCommands {
-	@GripperArguments("{player}")
-	public void ignitePlayer(Player player) {
-		player.setFireTicks(1000);
+	package com.joshcummings.ignite.gripper;
+	
+	import org.bukkit.entity.Player;
+	
+	import com.joshcummings.gripper.annotation.GripperArguments;
+	import com.joshcummings.gripper.annotation.GripperCommand;
+	
+	@GripperCommand(name="ignite", playerOnly=true)
+	public class IgniteCommands {
+		@GripperArguments("{player}")
+		public void ignitePlayer(Player player) {
+			player.setFireTicks(1000);
+		}
 	}
-}
 
 After that, it is simply a matter of initializing the GripperCommandExecutor, which
 will do the rest of the work:
 
-public class YourPlugin extends JavaPlugin {
-	private GripperCommandExecutor executor;
+	public class YourPlugin extends JavaPlugin {
+		private GripperCommandExecutor executor;
 
-	public void onEnable() {
-		executor = new GripperCommandExecutor
-			(this, "com.joshcummings.ignite.gripper");
+		public void onEnable() {
+			executor = new GripperCommandExecutor
+				(this, "com.joshcummings.ignite.gripper");
+		}	
+	
+		// ...
+	
+		public boolean onCommand(CommandSender commandSender, Command cmd,
+			String label, String[] params) {
+			return executor.onCommmand(commmandSender, cmd, label, params);
+		}
 	}
-
-	// ...
-
-	public boolean onCommand(CommandSender commandSender, Command cmd,
-		String label, String[] params) {
-		return executor.onCommmand(commmandSender, cmd, label, params);
-	}
-}
 
 The GripperCommandExecutor, on construction, will scan the package specified for any
 classes using the Gripper annotations. It will construct those classes and cache them,
@@ -70,30 +70,30 @@ Commands with multiple argument permutations
 
 IgniteCommands can now be expanded to support more features with ease:
 
-package com.joshcummings.gripper.command;
-
-import org.bukkit.entity.Player;
-
-import com.joshcummings.gripper.annotation.GripperArguments;
-import com.joshcummings.gripper.annotation.GripperCommand;
-
-@GripperCommand(value="ignite", playerOnly=true)
-public class IgniteCommands {
-	@GripperArguments
-	public void igniteSelf(Player self) {
-		self.setFireTicks(1000);
-	}
+	package com.joshcummings.gripper.command;
 	
-	@GripperArguments(value="{player}")
-	public void ignite(Player player) {
-		player.setFireTicks(1000);
-	}
+	import org.bukkit.entity.Player;
 	
-	@GripperArguments(value="{player} {time}")
-	public void ignite(Player player, Integer time) {
-		player.setFireTicks(time);
+	import com.joshcummings.gripper.annotation.GripperArguments;
+	import com.joshcummings.gripper.annotation.GripperCommand;
+	
+	@GripperCommand(value="ignite", playerOnly=true)
+	public class IgniteCommands {
+		@GripperArguments
+		public void igniteSelf(Player self) {
+			self.setFireTicks(1000);
+		}
+		
+		@GripperArguments(value="{player}")
+		public void ignite(Player player) {
+			player.setFireTicks(1000);
+		}
+	
+		@GripperArguments(value="{player} {time}")
+		public void ignite(Player player, Integer time) {
+			player.setFireTicks(time);
+		}
 	}
-}
 
 The first new command, igniteSelf, shows that the last argument in the method signature may always be
 the current player; no GripperArgument need be specified.
