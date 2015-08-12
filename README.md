@@ -21,6 +21,7 @@ options in the context of isolated method signatures.
 For example, consider the following class which replicates the Ignite-Player plugin, this
 time using Gripper:
 
+```java
 	package com.joshcummings.ignite.gripper;
 	
 	import org.bukkit.entity.Player;
@@ -35,10 +36,12 @@ time using Gripper:
 			player.setFireTicks(1000);
 		}
 	}
+```
 
 After that, it is simply a matter of initializing the GripperCommandExecutor, which
 will do the rest of the work:
 
+```java
 	public class YourPlugin extends JavaPlugin {
 		private GripperCommandExecutor executor;
 
@@ -54,6 +57,7 @@ will do the rest of the work:
 			return executor.onCommmand(commmandSender, cmd, label, params);
 		}
 	}
+```
 
 The GripperCommandExecutor, on construction, will scan the package specified for any
 classes using the Gripper annotations. It will construct those classes and cache them,
@@ -70,6 +74,7 @@ Commands with multiple argument permutations
 
 IgniteCommands can now be expanded to support more features with ease:
 
+```java
 	package com.joshcummings.gripper.command;
 	
 	import org.bukkit.entity.Player;
@@ -94,6 +99,7 @@ IgniteCommands can now be expanded to support more features with ease:
 			player.setFireTicks(time);
 		}
 	}
+```
 
 The first new command, igniteSelf, shows that the last argument in the method signature may always be
 the current player; no GripperArgument need be specified.
